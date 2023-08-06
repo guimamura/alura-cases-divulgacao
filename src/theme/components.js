@@ -5,57 +5,57 @@ import * as iconSet from "@fortawesome/free-solid-svg-icons";
 import { theme } from './theme';
 
 function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function renderCSSValue(cssPropName, cssPropValue) {
-    if (cssPropName.includes('horizontal')) {
-        return `
+  if (cssPropName.includes('horizontal')) {
+    return `
       ${cssPropName.replace('horizontal', 'left')}: ${cssPropValue};
       ${cssPropName.replace('horizontal', 'right')}: ${cssPropValue};
     `;
-    }
-    if (cssPropName.includes('vertical')) {
-        return `
+  }
+  if (cssPropName.includes('vertical')) {
+    return `
       ${cssPropName.replace('vertical', 'top')}: ${cssPropValue};
       ${cssPropName.replace('vertical', 'bottom')}: ${cssPropValue};
     `;
-    }
+  }
 
-    return cssPropName + ':' + cssPropValue + ';';
+  return cssPropName + ':' + cssPropValue + ';';
 }
 function renderCSS(props, currentBreakpoint) {
-    if (!props) return '';
+  if (!props) return '';
 
-    return Object
-        .keys(props)
-        .map((prop) => {
-            const cssPropName = prop.split(/(?=[A-Z])/).join('-').toLowerCase();
-            const cssPropValue = props[prop];
-            const isCssPropValueAnObject = Object.prototype.toString.call(cssPropValue) === '[object Object]';
-            const currentCssPropValue = cssPropValue[currentBreakpoint];
+  return Object
+    .keys(props)
+    .map((prop) => {
+      const cssPropName = prop.split(/(?=[A-Z])/).join('-').toLowerCase();
+      const cssPropValue = props[prop];
+      const isCssPropValueAnObject = Object.prototype.toString.call(cssPropValue) === '[object Object]';
+      const currentCssPropValue = cssPropValue[currentBreakpoint];
 
-            if (currentBreakpoint == 'xs' && !isCssPropValueAnObject) {
-                return renderCSSValue(cssPropName, cssPropValue);
-            }
+      if (currentBreakpoint == 'xs' && !isCssPropValueAnObject) {
+        return renderCSSValue(cssPropName, cssPropValue);
+      }
 
-            if (currentCssPropValue) {
-                return renderCSSValue(cssPropName, currentCssPropValue);
-            }
-        }).filter(Boolean).join('');
+      if (currentCssPropValue) {
+        return renderCSSValue(cssPropName, currentCssPropValue);
+      }
+    }).filter(Boolean).join('');
 }
 
 export function Box({
-    as,
-    styleSheet: { focus, hover, srOnly, ...styleSheet },
-    ...props
+  as,
+  styleSheet: { focus, hover, srOnly, ...styleSheet },
+  ...props
 }) {
-    const Tag = as || 'div';
+  const Tag = as || 'div';
 
-    return (
-        <React.Fragment>
-            <Tag {...props} className={`${props.className ? props.className : ''} ${srOnly ? 'sr-only' : ''}`} />
-            <style jsx>{`
+  return (
+    <React.Fragment>
+      <Tag {...props} className={`${props.className ? props.className : ''} ${srOnly ? 'sr-only' : ''}`} />
+      <style jsx>{`
         ${Tag} {
           ${renderCSS(styleSheet, 'xs')};
         }
@@ -110,8 +110,8 @@ export function Box({
           }
         }
       `}</style>
-        </React.Fragment>
-    )
+    </React.Fragment>
+  )
 }
 
 /* @media screen and (min-width: ${theme.breakpoints['Breakpoints.md']}px) {
@@ -143,138 +143,138 @@ export function Box({
 } */
 
 Box.defaultProps = {
-    styleSheet: {},
+  styleSheet: {},
 };
 
 export function Icon({ as, styleSheet, ...props }) {
-    const {
-        iconVariant,
-        ...restStyleSheet
-    } = styleSheet;
-    const styleSheetUpdated = restStyleSheet;
+  const {
+    iconVariant,
+    ...restStyleSheet
+  } = styleSheet;
+  const styleSheetUpdated = restStyleSheet;
 
-    console.log('iconVariant', iconVariant);
+  console.log('iconVariant', iconVariant);
 
-    return (
-        <Box
-            as={FontAwesomeIcon}
-            icon={iconSet[`fa${capitalize(iconVariant)}`]}
-            crossOrigin="anonymous"
-            styleSheet={{
-                width: '1.5ch',
-                height: '1.5ch',
-                ...styleSheetUpdated
-            }}
-            {...props}
-        />
-    )
+  return (
+    <Box
+      as={FontAwesomeIcon}
+      icon={iconSet[`fa${capitalize(iconVariant)}`]}
+      crossOrigin="anonymous"
+      styleSheet={{
+        width: '1.5ch',
+        height: '1.5ch',
+        ...styleSheetUpdated
+      }}
+      {...props}
+    />
+  )
 }
 
 export function Text({ as, styleSheet, ...props }) {
-    const {
-        textVariant = {
-            fontSize: 'inherit',
-        },
-        ...restStyleSheet
-    } = styleSheet;
-    const styleSheetUpdated = { ...textVariant, ...restStyleSheet };
-    const tag = as || 'span';
-    return (
-        <Box
-            as={tag}
-            styleSheet={styleSheetUpdated}
-            {...props}
-        />
-    )
+  const {
+    textVariant = {
+      fontSize: 'inherit',
+    },
+    ...restStyleSheet
+  } = styleSheet;
+  const styleSheetUpdated = { ...textVariant, ...restStyleSheet };
+  const tag = as || 'span';
+  return (
+    <Box
+      as={tag}
+      styleSheet={styleSheetUpdated}
+      {...props}
+    />
+  )
 }
 Text.defaultProps = {
-    styleSheet: {},
+  styleSheet: {},
 };
 
 export function Image({ as, ...props }) {
-    const tag = as || 'img';
-    const {
-        children,
-        dangerouslySetInnerHTML,
-        ...imageProps
-    } = props;
+  const tag = as || 'img';
+  const {
+    children,
+    dangerouslySetInnerHTML,
+    ...imageProps
+  } = props;
 
-    return (
-        <Box as={tag} {...imageProps} />
-    );
+  return (
+    <Box as={tag} {...imageProps} />
+  );
 }
 Image.defaultProps = {
-    styleSheet: {},
+  styleSheet: {},
 };
 
 export function Input({ as, styleSheet, ...props }) {
-    const tag = 'input';
-    const finalStyleSheet = {
-        transition: 'all 0.2s ease-in-out',
-        outline: 0,
-        textVariant: theme.typography.variants.body2,
-        color: theme.colors.neutral[900],
-        boxShadow: `0 5px 7px -5px ${theme.colors.neutral[999]}43`,
-        display: 'block',
-        width: theme.space["x1/1"],
-        border: `1px solid ${theme.colors.neutral[300]}`,
-        borderRadius: theme.space.x2,
-        paddingHorizontal: theme.space.x5,
-        paddingVertical: theme.space.x3,
-        focus: {
-            border: `1px solid ${theme.colors.primary[500]}`,
-            boxShadow: `0 5px 10px -5px ${theme.colors.neutral[999]}43`,
-        },
-        ...styleSheet,
-    };
+  const tag = 'input';
+  const finalStyleSheet = {
+    transition: 'all 0.2s ease-in-out',
+    outline: 0,
+    textVariant: theme.typography.variants.body2,
+    color: theme.colors.neutral[900],
+    boxShadow: `0 5px 7px -5px ${theme.colors.neutral[999]}43`,
+    display: 'block',
+    width: theme.space["x1/1"],
+    border: `1px solid ${theme.colors.neutral[300]}`,
+    borderRadius: theme.space.x2,
+    paddingHorizontal: theme.space.x5,
+    paddingVertical: theme.space.x3,
+    focus: {
+      border: `1px solid ${theme.colors.primary[500]}`,
+      boxShadow: `0 5px 10px -5px ${theme.colors.neutral[999]}43`,
+    },
+    ...styleSheet,
+  };
 
-    return (
-        <Text as={tag} styleSheet={finalStyleSheet} {...props} />
-    );
+  return (
+    <Text as={tag} styleSheet={finalStyleSheet} {...props} />
+  );
 }
 Input.defaultProps = {
-    styleSheet: {},
+  styleSheet: {},
 };
 
 export function Button({ as, styleSheet, ...props }) {
-    const {
-        buttonVariant = 'primary',
-        ...restStyleSheet
-    } = styleSheet;
-    const tag = 'button';
+  const {
+    buttonVariant = 'primary',
+    ...restStyleSheet
+  } = styleSheet;
+  const tag = 'button';
 
-    const finalStyleSheet = {
-        cursor: 'pointer',
-        textVariant: theme.typography.variants.body2,
-        color: theme.colors.neutral["000"],
-        boxShadow: `0 5px 7px -5px ${theme.colors.neutral["999"]}43`,
-        display: 'block',
-        outline: 0,
-        width: theme.space["x1/1"],
-        border: `${theme.space.xpx} solid ${theme.colors[buttonVariant][900]}`,
-        borderRadius: theme.space.x2,
-        paddingHorizontal: {
-            xs: theme.space.x5,
-            sm: theme.space.x10
-        },
-        paddingVertical: theme.space.x3,
-        transition: 'all 0.2s ease-in-out',
-        backgroundColor: theme.colors[buttonVariant][600],
-        hover: {
-            backgroundColor: theme.colors[buttonVariant][500],
-            boxShadow: `0 5px 10px -5px ${theme.colors.neutral[999]}73`,
-        },
-        focus: {
-            backgroundColor: theme.colors[buttonVariant][700],
-            boxShadow: `0 5px 10px -5px ${theme.colors.neutral[999]}93`,
-        },
-        ...restStyleSheet,
-    };
+  const finalStyleSheet = {
+    cursor: 'pointer',
+    textVariant: theme.typography.variants.body2,
+    color: theme.colors.neutral["000"],
+    boxShadow: `0 5px 7px -5px ${theme.colors.neutral["999"]}43`,
+    display: 'block',
+    outline: 0,
+    width: theme.space["x1/1"],
+    border: `${theme.space.xpx} solid ${theme.colors[buttonVariant][900]}`,
+    borderRadius: theme.space.x2,
+    paddingHorizontal: {
+      xs: theme.space.x5,
+      sm: theme.space.x10
+    },
+    paddingVertical: theme.space.x3,
+    transition: 'all 0.2s ease-in-out',
+    backgroundColor: theme.colors[buttonVariant][600],
+    hover: {
+      backgroundColor: theme.colors[buttonVariant][500],
+      boxShadow: `0 5px 10px -5px ${theme.colors.neutral[999]}73`,
+    },
+    focus: {
+      backgroundColor: theme.colors[buttonVariant][700],
+      boxShadow: `0 5px 10px -5px ${theme.colors.neutral[999]}93`,
+    },
+    ...restStyleSheet,
+  };
 
-    return (
-        <Text as={tag} styleSheet={finalStyleSheet} {...props} />
-    );
+  return (
+    <Text as={tag} styleSheet={finalStyleSheet} {...props} />
+  );
 }
 Button.defaultProps = {
-    styleSheet: {},
+  styleSheet: {},
 };
