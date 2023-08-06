@@ -1,8 +1,8 @@
 import { theme } from './theme';
 
 export default function GlobalStyle() {
-  return (
-    <style global jsx>{`
+    return (
+        <style global jsx>{`
         * {
           box-sizing: border-box;
           padding: 0;
@@ -54,5 +54,5 @@ export default function GlobalStyle() {
           align-items: stretch;
         }
       `}</style>
-  )
+    )
 }
